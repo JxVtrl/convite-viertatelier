@@ -1,10 +1,52 @@
+import React, { useState, useEffect } from "react"
+
 function App() {
+  const [items, setItems] = useState(
+    Array.from({ length: 5 }, (_, idx) => idx + 1)
+  )
+  const [hasMore, setHasMore] = useState(true)
+
+  const loadMoreItems = () => {
+    if (!hasMore) return
+    const newItems = items.length + 5
+    if (newItems >= 37) {
+      setItems(
+        items.concat(
+          Array.from(
+            { length: 37 - items.length },
+            (_, idx) => idx + items.length + 1
+          )
+        )
+      )
+      setHasMore(false)
+    } else {
+      setItems(
+        items.concat(
+          Array.from({ length: 5 }, (_, idx) => idx + items.length + 1)
+        )
+      )
+    }
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        loadMoreItems()
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [items, hasMore])
+
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      {Array.from({ length: 37 }, (_, idx) => idx + 1).map((image, index) => {
-        console.log(image)
+      {items.map((image, index) => {
         const formattedIndex = image < 10 ? `0${image}` : image
         return (
           <img
