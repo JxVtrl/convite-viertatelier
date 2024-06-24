@@ -14,8 +14,7 @@ function App() {
             style={{
               width: "100vw",
               flexShrink: 0,
-              aspectRatio: "2/3",
-              backgroundColor: "gray",
+              aspectRatio: "0.75",
             }}
           />
         )
