@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
+import { motion, useInView } from "framer-motion"
 
 function App() {
   const [items, setItems] = useState(
@@ -49,19 +50,34 @@ function App() {
       {items.map((image, index) => {
         const formattedIndex = image < 10 ? `0${image}` : image
         return (
-          <img
-            key={index}
-            src={`/images/_NOIVAS_2024_VIERT_page-00${formattedIndex}.jpg`}
-            alt={`Imagem ${index + 1}`}
-            style={{
-              width: "100vw",
-              flexShrink: 0,
-              aspectRatio: "0.75",
-            }}
-          />
+          <Image key={index} index={index} formattedIndex={formattedIndex} />
         )
       })}
     </div>
+  )
+}
+
+const Image = ({ index, formattedIndex }) => {
+  const ref = useRef()
+  const inView = useInView(ref, {
+    triggerOnce: true,
+    threshold: 0.1,
+  })
+
+  return (
+    <motion.img
+      ref={ref}
+      src={`/images/_NOIVAS_2024_VIERT_page-00${formattedIndex}.jpg`}
+      alt={`Imagem ${index + 1}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: inView ? 1 : 0 }}
+      transition={{ duration: 0.5 }}
+      style={{
+        width: "100vw",
+        flexShrink: 0,
+        aspectRatio: "0.75",
+      }}
+    />
   )
 }
 
